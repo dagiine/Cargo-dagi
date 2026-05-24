@@ -7,67 +7,142 @@
     <title>Cash 4 Cargo | Хятад-Монгол карго тээвэр, захиалга хянах</title>
     <meta
       name="description"
-      content="Cash 4 Cargo нь Хятадаас Монгол руу бараа, ачаа тээвэрлэх карго үйлчилгээ юм. 
-        Захиалгын код болон утасны дугаараар ачаагаа хянах, үнэ тооцох, шинэ захиалга үүсгэх боломжтой."
+      content="Cash 4 Cargo нь Хятадаас Монгол руу бараа, ачаа тээвэрлэх карго үйлчилгээ юм. Захиалгын код болон утасны дугаараар ачаагаа хянах, үнэ тооцох, шинэ захиалга үүсгэх боломжтой."
     />
     <meta
       name="keywords"
-      content="Cash 4 Cargo, карго, Хятад Монгол карго, ачаа тээвэр, захиалга хянах, cargo Mongolia, 
-        China Mongolia cargo, карго үнэ"
+      content="Cash 4 Cargo, карго, Хятад Монгол карго, ачаа тээвэр, захиалга хянах, cargo Mongolia, China Mongolia cargo, карго үнэ"
     />
     <meta name="author" content="Cash 4 Cargo" />
     <meta name="robots" content="index, follow" />
-
     <meta name="language" content="Mongolian" />
     <meta name="geo.region" content="MN" />
     <meta name="geo.placename" content="Ulaanbaatar" />
 
     <meta property="og:title" content="Cash 4 Cargo | Хятад-Монгол карго тээвэр" />
-    <meta
-      property="og:description"
-      content="Хятадаас Монгол руу карго тээвэрлэлт. Захиалгаа хянах, үнэ тооцох, шинэ захиалга үүсгэх боломжтой."
-    />
+    <meta property="og:description" content="Хятадаас Монгол руу карго тээвэрлэлт. Захиалгаа хянах, үнэ тооцох, шинэ захиалга үүсгэх боломжтой." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://dagiine.github.io/cash4cargo/" />
-    <meta property="og:image" content="https://dagiine.github.io/cash4cargo/pics/logo.png" />
     <meta property="og:locale" content="mn_MN" />
     <meta property="og:site_name" content="Cash 4 Cargo" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Cash 4 Cargo | Хятад-Монгол карго тээвэр" />
-    <meta
-      name="twitter:description"
-      content="Карго захиалга хянах, үнэ тооцох, шинэ захиалга үүсгэх үйлчилгээ."
-    />
-    <meta name="twitter:image" content="https://dagiine.github.io/cash4cargo/pics/logo.png" />
+    <meta name="twitter:description" content="Карго захиалга хянах, үнэ тооцох, шинэ захиалга үүсгэх үйлчилгээ." />
 
     <link rel="canonical" href="https://dagiine.github.io/cash4cargo/" />
+    <link rel="icon" href="./pics/logo.webp" type="image/webp" />
 
-    <link rel="icon" href="./pics/favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="./pics/apple-touch-icon.png" />
-
-    <link rel="icon" href="./pics/logo.png" type="image/png" />
-
-    <!-- Performance: hero зураг LCP-д нөлөөлдөг тул түрүүлж татна -->
+    <!-- Hero зураг нь LCP тул хамгийн түрүүнд татна. -->
     <link rel="preload" href="./pics/hero.webp" as="image" type="image/webp" fetchpriority="high" />
 
-    <link rel="stylesheet" href="./components/header.css" />
-    <link rel="stylesheet" href="./components/footer.css" />
-    <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./components/status-badge.css" />
-    <link rel="stylesheet" href="./components/faq-item.css" />
-    <link rel="stylesheet" href="./components/order-card.css" />
+    <!-- Эхний paint-д хэрэгтэй хамгийн бага style. Том CSS файлуудыг доор async ачаална. -->
+    <style>
+      :root {
+        --color-cream: #fffdf1;
+        --color-orange: #ff9644;
+        --color-brown: #562f00;
+        --color-bg: var(--color-cream);
+        --color-text: var(--color-brown);
+        --color-muted: rgba(86, 47, 0, 0.65);
+        --font-base: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --space-page: 40px;
+        --radius-md: 10px;
+        --radius-lg: 16px;
+        --btn-bg: var(--color-orange);
+        --btn-color: var(--color-cream);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --color-bg: #141720;
+          --color-text: #f1f5f9;
+          --color-muted: #a8b8cc;
+          --btn-bg: rgba(255, 217, 0, 1);
+          --btn-color: #141720;
+        }
+      }
+      *, *::before, *::after { box-sizing: border-box; }
+      html { background: var(--color-bg); }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--color-bg);
+        color: var(--color-text);
+        font-family: var(--font-base);
+        line-height: 1.6;
+      }
+      #app { min-height: 100vh; }
+      .app-loading {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        color: var(--color-muted);
+        font-weight: 800;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+        padding: 0 24px;
+        border: 0;
+        border-radius: var(--radius-md);
+        background: var(--btn-bg);
+        color: var(--btn-color);
+        font-weight: 800;
+        text-decoration: none;
+      }
+      @media (max-width: 767px) { :root { --space-page: 16px; } }
+    </style>
 
+    <!-- CSS-ийг render blocking болгохгүйгээр ачаалах жижиг helper. -->
+    <script>
+      function loadStyle(href) {
+        var link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "style";
+        link.href = href;
+        link.onload = function () {
+          link.onload = null;
+          link.rel = "stylesheet";
+        };
+        document.head.appendChild(link);
+      }
+
+      loadStyle("./styles.css");
+      loadStyle("./components/header.css");
+      loadStyle("./components/footer.css");
+      loadStyle("./components/status-badge.css");
+      loadStyle("./components/faq-item.css");
+      loadStyle("./components/order-card.css");
+    </script>
+    <noscript>
+      <link rel="stylesheet" href="./styles.css" />
+      <link rel="stylesheet" href="./components/header.css" />
+      <link rel="stylesheet" href="./components/footer.css" />
+      <link rel="stylesheet" href="./components/status-badge.css" />
+      <link rel="stylesheet" href="./components/faq-item.css" />
+      <link rel="stylesheet" href="./components/order-card.css" />
+    </noscript>
+
+    <!-- Icon font нь render blocking биш. Ачаалагдахаас өмнө текст контент харагдана. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap" />
+    </noscript>
   </head>
 
   <body>
     <div id="app">
-      <script type="module" src="./app.js"></script>
+      <div class="app-loading">Cash 4 Cargo</div>
     </div>
+    <script type="module" src="./app.js"></script>
   </body>
 </html>

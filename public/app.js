@@ -82,11 +82,19 @@ function loadCSS(page) {
   // Шинэ <link> tag үүсгэнэ.
   const link = document.createElement("link");
 
-  // Энэ нь stylesheet гэдгийг заана.
-  link.rel = "stylesheet";
+  // Performance: CSS-ийг preload хийж аваад дараа нь stylesheet болгоно.
+  // Ингэснээр эхний render-ийг аль болох бага хаана.
+  link.rel = "preload";
+  link.as = "style";
 
   // CSS file-ийн замыг тохируулна.
   link.href = `./css/${page}.css`;
+
+  // CSS татагдаж дуусмагц жинхэнэ stylesheet болгоно.
+  link.onload = () => {
+    link.onload = null;
+    link.rel = "stylesheet";
+  };
 
   // Дараа нь устгахын тулд id өгч байна.
   link.id = "page-css";
@@ -105,8 +113,14 @@ function loadExtraCSS(page) {
   if (page === "track") {
     const link = document.createElement("link");
 
-    link.rel = "stylesheet";
+    // Performance: track result CSS-ийг бас async ачаална.
+    link.rel = "preload";
+    link.as = "style";
     link.href = "./css/track-results.css";
+    link.onload = () => {
+      link.onload = null;
+      link.rel = "stylesheet";
+    };
     link.id = "page-extra-css";
 
     document.head.appendChild(link);

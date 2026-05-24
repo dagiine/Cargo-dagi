@@ -109,7 +109,7 @@ export function renderHeader(routes, currentHash) {
       <!-- Logo хэсэг -->
       <a href="${logoLink}" class="logo">
         <span class="logo-icon">
-          <img src="./pics/logo.png" alt="Cash 4 Cargo Logo" width="32" height="32" />
+          <img src="./pics/logo.webp" alt="Cash 4 Cargo Logo" width="32" height="32" />
         </span>
         Cash 4 Cargo
       </a>

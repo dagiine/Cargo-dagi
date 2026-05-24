@@ -343,3 +343,16 @@ npm run dev
 Ctrl + F5
 ```
 
+
+## Performance v2 notes
+
+Энэ хувилбарт Lighthouse-ийн `Render-blocking requests` асуудлыг багасгахын тулд:
+
+- Google Inter font link устгаж, system font fallback ашигласан.
+- Material Symbols icon font-ийг render blocking биш preload байдлаар ачаалдаг болгосон.
+- Гол CSS файлуудыг `preload` → `stylesheet` хэлбэрээр async ачаалдаг болгосон.
+- `app.js` доторх page CSS ачааллыг мөн async preload болгосон.
+- `server.js` дээр static asset cache-г 30 хоног болгосон.
+- HTML cache-г `no-cache` болгож, CSS/JS/image файлуудыг cache-д үлдээдэг болгосон.
+
+Хэрэв CSS өөрчлөлт харагдахгүй бол browser дээр `Ctrl + F5` дарж hard refresh хийнэ.

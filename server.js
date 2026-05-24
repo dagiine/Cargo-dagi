@@ -34,8 +34,16 @@ app.get("/api/health", (_, res) => res.json({ status: "ok" }));
 // ─── Static frontends ────────────────────────────────────────
 // Performance: зураг, CSS, JS файлуудыг browser cache-д хадгална.
 const staticOptions = {
-  maxAge: "7d",
+  maxAge: "30d",
   etag: true,
+  immutable: true,
+  setHeaders(res, filePath) {
+    // HTML нь хурдан өөрчлөгдөж магадгүй тул cache хийхгүй.
+    // CSS/JS/image файлууд 30 хоног cache-д хадгалагдана.
+    if (filePath.endsWith(".html")) {
+      res.setHeader("Cache-Control", "no-cache");
+    }
+  },
 };
 
 app.use("/admin", express.static(ADMIN_PATH, staticOptions));
