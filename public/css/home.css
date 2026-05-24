@@ -306,12 +306,6 @@ html {
   opacity: 0.5;
 }
 
-/* Web component host өөрөө grid-ийн зай авахгүй.
-   Доторх .step нь өмнөх загвараараа харагдана. */
-status-badge[variant="home"] {
-  display: contents;
-}
-
 /* 5 алхмын grid */
 .steps-grid {
   position: relative;

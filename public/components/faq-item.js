@@ -1,47 +1,30 @@
 // ===============================================
-// FAQ хэсэг дээр нэг асуулт, хариултын item харуулна.
+// FAQ ITEM RENDER HELPER
+// Web component биш. Нэг FAQ item-ийн HTML string буцаана.
 // ===============================================
 
-// HTMLElement-ээс удамшуулж өөрийн custom element үүсгэж байна.
-class FaqItem extends HTMLElement {
-  // connectedCallback нь component HTML дээр гарч ирэх үед автоматаар ажилладаг.
-  connectedCallback() {
-    // question attribute-аас асуултын текстийг авна.
-    // Хэрэв question attribute байхгүй бол default-аар "Асуулт" гэж харуулна.
-    const question = this.getAttribute("question") || "Асуулт";
-
-    // answer attribute-аас хариултын текстийг авна.
-    // Хэрэв answer байхгүй бол хоосон string байна.
-    const answer = this.getAttribute("answer") || "";
-
-    // category attribute-аас тухайн FAQ аль ангилалд хамаарахыг авна.
-    // Жишээ: "Захиалга", "Төлбөр", "Хүргэлт"
-    // Хэрэв category байхгүй бол default-аар "Захиалга" гэж авна.
-    const category = this.getAttribute("category") || "Захиалга";
-
-    // Component-ийн дотор харагдах HTML-ийг үүсгэж байна.
-    this.innerHTML = `
-      <!-- data-category нь FAQ-г ангиллаар filter хийхэд ашиглагдана -->
-      <article data-category="${category}">
-        
-        <!-- details tag нь нээгдэж/хаагддаг dropdown хэсэг үүсгэнэ -->
-        <details>
-          
-          <!-- summary tag дээр асуулт харагдана -->
-          <!-- Хэрэглэгч summary дээр дарахад answer хэсэг нээгдэнэ -->
-          <summary>${question}</summary>
-          
-          <!-- p tag дотор тухайн асуултын хариулт харагдана -->
-          <p>${answer}</p>
-        </details>
-      </article>
-    `;
-  }
+// HTML дотор текст хийхэд аюулгүй болгоно.
+function escapeHTML(value = "") {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
-// "faq-item" нэртэй custom element өмнө нь бүртгэгдсэн эсэхийг шалгана.
-// Ингэж шалгахгүй бол нэг component дахин define хийгдэх үед browser error өгдөг.
-if (!customElements.get("faq-item")) {
-  // <faq-item></faq-item> гэсэн өөрийн HTML tag-г browser-д бүртгэж байна.
-  customElements.define("faq-item", FaqItem);
+// Нэг асуулт/хариултын HTML үүсгэнэ.
+export function buildFaqItem(faq = {}) {
+  const category = faq.category || "Захиалга";
+  const question = faq.question || "Асуулт";
+  const answer = faq.answer || "";
+
+  return `
+    <article class="faq-item" data-category="${escapeHTML(category)}">
+      <details>
+        <summary>${escapeHTML(question)}</summary>
+        <p>${escapeHTML(answer)}</p>
+      </details>
+    </article>
+  `;
 }

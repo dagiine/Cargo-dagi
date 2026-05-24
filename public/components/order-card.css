@@ -233,7 +233,7 @@
 }
 
 /* Timeline badge зурааснаас дээр харагдана */
-.order-card__status-list status-badge {
+.order-card__status-list .status-badge {
   position: relative;
   z-index: 1;
 }

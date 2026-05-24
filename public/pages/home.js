@@ -1,3 +1,5 @@
+import { buildStatusBadge } from "../components/status-badge.js";
+
 export default function home() {
   return `
     <section class="hero">
@@ -71,40 +73,40 @@ export default function home() {
 
         <div class="steps-grid">
 
-          <status-badge
-            variant="home"
-            icon="send"
-            status="Захиалга үүсгэсэн"
-            description="Та захиалгаа манай системд бүртгүүлснээр илгээмжний мэдээлэл үүснэ. Энэ шатанд захиалгын мэдээллээ засах эсвэл цуцлах боломжтой."
-          ></status-badge>
+          ${buildStatusBadge({
+            variant: "home",
+            icon: "send",
+            status: "Захиалга үүсгэсэн",
+            description: "Та захиалгаа манай системд бүртгүүлснээр илгээмжний мэдээлэл үүснэ. Энэ шатанд захиалгын мэдээллээ засах эсвэл цуцлах боломжтой.",
+          })}
 
-          <status-badge
-            variant="home"
-            icon="inventory_2"
-            status="Хятадын агуулахад"
-            description="Таны илгээмж Хятад дахь агуулахад ирж, жин хэмжилт хийгдэнэ. Ачаа ихэвчлэн тухайн өдөр эсвэл маргааш нь тээвэрлэгдэнэ."
-          ></status-badge>
+          ${buildStatusBadge({
+            variant: "home",
+            icon: "inventory_2",
+            status: "Хятадын агуулахад",
+            description: "Таны илгээмж Хятад дахь агуулахад ирж, жин хэмжилт хийгдэнэ. Ачаа ихэвчлэн тухайн өдөр эсвэл маргааш нь тээвэрлэгдэнэ.",
+          })}
 
-          <status-badge
-            variant="home"
-            icon="local_shipping"
-            status="Замын Үүд дээр"
-            description="Илгээмж хилээр нэвтрэх гаалийн бүрдүүлэлтэд орно. Гаалийн шалгалт дундажаар 3–24 цаг орчим үргэлжилдэг."
-          ></status-badge>
+          ${buildStatusBadge({
+            variant: "home",
+            icon: "local_shipping",
+            status: "Замын Үүд дээр",
+            description: "Илгээмж хилээр нэвтрэх гаалийн бүрдүүлэлтэд орно. Гаалийн шалгалт дундажаар 3–24 цаг орчим үргэлжилдэг.",
+          })}
 
-          <status-badge
-            variant="home"
-            icon="warehouse"
-            status="Улаанбаатарт ирсэн"
-            description="Илгээмжээ хүлээн авахдаа хяналтын код эсвэл бүртгэлтэй утасны дугаараа баталгаажуулна."
-          ></status-badge>
+          ${buildStatusBadge({
+            variant: "home",
+            icon: "warehouse",
+            status: "Улаанбаатарт ирсэн",
+            description: "Илгээмжээ хүлээн авахдаа хяналтын код эсвэл бүртгэлтэй утасны дугаараа баталгаажуулна.",
+          })}
 
-          <status-badge
-            variant="home"
-            icon="check_circle"
-            status="Олгогдсон"
-            description="Та илгээмжээ хүлээн авч, захиалга амжилттай дуусгавар болно."
-          ></status-badge>
+          ${buildStatusBadge({
+            variant: "home",
+            icon: "check_circle",
+            status: "Олгогдсон",
+            description: "Та илгээмжээ хүлээн авч, захиалга амжилттай дуусгавар болно.",
+          })}
         </div>
       </div>
     </section>

@@ -356,3 +356,13 @@ Ctrl + F5
 - HTML cache-г `no-cache` болгож, CSS/JS/image файлуудыг cache-д үлдээдэг болгосон.
 
 Хэрэв CSS өөрчлөлт харагдахгүй бол browser дээр `Ctrl + F5` дарж hard refresh хийнэ.
+
+
+## Component-ийн шинэчлэлт
+
+`status-badge` болон `faq-item` нь одоо custom web component биш болсон. Эдгээр нь энгийн JavaScript render helper function болсон:
+
+- `public/components/status-badge.js` → `buildStatusBadge()`
+- `public/components/faq-item.js` → `buildFaqItem()`
+
+Ингэснээр browser custom element бүртгэх шаардлагагүй, эхний load дээр илүү энгийн ажиллана. Харин `order-card` нь web component хэвээр байгаа.

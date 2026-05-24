@@ -1,3 +1,5 @@
+import { buildStatusBadge } from "./status-badge.js";
+
 // ===============================================
 // Захиалга хянах page дээр нэг илгээмжийн card зурна.
 // ===============================================
@@ -87,14 +89,13 @@ class OrderCard extends HTMLElement {
               <!-- Tracking code -->
               <h3 class="track-card__code">${order.trackCode}</h3>
 
-              <!-- Status badge component -->
-              <!-- Энэ нь status-badge гэсэн өөр web component ашиглаж байна -->
-              <status-badge
-                variant="header"
-                icon="${order.icon}"
-                status="${order.status}"
-                date="${order.statusDate}"
-              ></status-badge>
+              <!-- Status badge: web component биш, helper function-оор HTML зурж байна -->
+              ${buildStatusBadge({
+                variant: "header",
+                icon: order.icon,
+                status: order.status,
+                date: order.statusDate,
+              })}
 
               <!-- Утас, жин, үнэ гэсэн жижиг мэдээллүүд -->
               <div class="track-card__mini-details">
@@ -275,7 +276,7 @@ class OrderCard extends HTMLElement {
         const icon = STATUS_ICON_MAP.get(label) || "help";
 
         // Тухайн status-ийн огноо байвал харуулна.
-        // Байхгүй бол status-badge component өөрөө "..." гэж харуулна.
+        // Байхгүй бол helper function "..." гэж харуулна.
         const dateText = order.statusDates[label] || "";
 
         // done/current class-уудыг бэлдэнэ.
@@ -283,16 +284,14 @@ class OrderCard extends HTMLElement {
           .filter(Boolean)
           .join(" ");
 
-        // Status бүрийг status-badge component-оор харуулна.
-        return `
-          <status-badge
-            variant="timeline"
-            icon="${icon}"
-            status="${label}"
-            date="${dateText}"
-            state="${state}"
-          ></status-badge>
-        `;
+        // Status бүрийг helper function-оор харуулна.
+        return buildStatusBadge({
+          variant: "timeline",
+          icon,
+          status: label,
+          date: dateText,
+          state,
+        });
       })
       .join("");
 

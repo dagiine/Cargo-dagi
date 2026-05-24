@@ -9,15 +9,6 @@ order-card {
   display: block;
 }
 
-/* Status badge component track page дээр timeline-ийн child шиг ажиллана */
-status-badge[variant="timeline"] {
-  display: contents;
-}
-
-status-badge[variant="header"] {
-  display: block;
-}
-
 #track-results {
   width: 100%;
   max-width: 880px;

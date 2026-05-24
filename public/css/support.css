@@ -216,7 +216,3 @@ details p {
   }
 }
 
-/* FAQ web component нь энгийн block шиг ажиллана */
-faq-item {
-  display: block;
-}

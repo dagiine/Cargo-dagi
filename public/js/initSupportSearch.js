@@ -8,6 +8,7 @@
 // ===============================================
 
 import { faqAPI } from "./api.js";
+import { buildFaqItem } from "../components/faq-item.js";
 
 // Үндсэн category-ууд. Dropdown байхгүй, зөвхөн button байна.
 const DEFAULT_CATEGORIES = [
@@ -158,13 +159,7 @@ function buildCategoryButton(category) {
 
 // Нэг FAQ item-ийн HTML үүсгэнэ.
 function buildFaqArticle(faq) {
-  return `
-    <faq-item
-      category="${escapeAttr(faq.category)}"
-      question="${escapeAttr(faq.question)}"
-      answer="${escapeAttr(faq.answer)}"
-    ></faq-item>
-  `;
+  return buildFaqItem(faq);
 }
 
 // Category button-уудыг зурна.

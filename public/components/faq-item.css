@@ -3,10 +3,6 @@
    Тусламж page-ийн нэг асуулт/хариулт
 ========================================= */
 
-faq-item {
-  display: block;
-}
-
 .faq-item {
   background: var(--color-cream);
   border: 1px solid var(--border-default);

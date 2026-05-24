@@ -157,21 +157,21 @@ function ensureCSS(id, href) {
 // Dynamic import ашиглаж байгаа тул зөвхөн тухайн page орсон үед JS нь ачаална.
 async function loadPageJS(page) {
   try {
-    // Support page дээр FAQ component/search logic хэрэгтэй.
+    // Support page дээр FAQ search logic хэрэгтэй.
+    // faq-item нь web component биш тул тусад нь import хийхгүй.
     if (page === "support") {
       ensureCSS("faq-item-css", "./components/faq-item.css");
-      await import("./components/faq-item.js");
 
       const module = await import("./js/initSupportSearch.js");
       module.initSupportSearch?.();
     }
 
-    // Track page дээр order-card/status-badge component хэрэгтэй.
+    // Track page дээр order-card хэрэгтэй.
+    // status-badge нь web component биш, order-card дотор helper function-оор ашиглагдана.
     if (page === "track") {
       ensureCSS("status-badge-css", "./components/status-badge.css");
       ensureCSS("order-card-css", "./components/order-card.css");
 
-      await import("./components/status-badge.js");
       await import("./components/order-card.js");
 
       const module = await import("./js/trackUI.js");
@@ -180,10 +180,9 @@ async function loadPageJS(page) {
       await new module.TrackUI().init();
     }
 
-    // Home page дээр status-badge component болон home tracking logic хэрэгтэй.
+    // Home page дээр home tracking logic хэрэгтэй.
+    // status-badge нь web component биш, home.js дотор helper function-оор зурна.
     if (page === "home") {
-      await import("./components/status-badge.js");
-
       const module = await import("./js/initHomePage.js");
 
       // Home дээрээс tracking code/phone хайх logic.
