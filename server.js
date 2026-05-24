@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import compression from "compression";
 import path from "path";
 import { fileURLToPath } from "url";
 import connectDB from "./config/db.js";
@@ -22,9 +21,6 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-// Performance: HTML/CSS/JS response-уудыг gzip/br шахалттай явуулна.
-app.use(compression());
-
 // ─── API Routes ──────────────────────────────────────────────
 app.use("/api/auth", authRoutes);
 app.use("/api/shipments", shipmentRoutes);
@@ -32,22 +28,8 @@ app.use("/api/faqs", faqRoutes);
 app.get("/api/health", (_, res) => res.json({ status: "ok" }));
 
 // ─── Static frontends ────────────────────────────────────────
-// Performance: зураг, CSS, JS файлуудыг browser cache-д хадгална.
-const staticOptions = {
-  maxAge: "30d",
-  etag: true,
-  immutable: true,
-  setHeaders(res, filePath) {
-    // HTML нь хурдан өөрчлөгдөж магадгүй тул cache хийхгүй.
-    // CSS/JS/image файлууд 30 хоног cache-д хадгалагдана.
-    if (filePath.endsWith(".html")) {
-      res.setHeader("Cache-Control", "no-cache");
-    }
-  },
-};
-
-app.use("/admin", express.static(ADMIN_PATH, staticOptions));
-app.use(express.static(FRONTEND_PATH, staticOptions));
+app.use("/admin", express.static(ADMIN_PATH));
+app.use(express.static(FRONTEND_PATH));
 
 console.log("User frontend:", FRONTEND_PATH);
 console.log("Admin frontend:", ADMIN_PATH);
@@ -64,9 +46,8 @@ app.get("*", (req, res) => {
 
 // ─── Start ───────────────────────────────────────────────────
 connectDB().then(() => {
-  app.listen(PORT, "0.0.0.0", () => {
+  app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
-    console.log(`Network: http://YOUR_IPV4:${PORT}`);
     console.log(`Admin: http://localhost:${PORT}/admin`);
   });
 });

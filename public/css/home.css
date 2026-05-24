@@ -14,8 +14,8 @@ html {
 .steps h2,
 .reviews h2,
 .warehouse-title {
-  font-size: var(--h1-font-size);
-  font-weight: var(--h1-font-weight);
+  font-size: var(--h2-font-size);
+  font-weight: var(--h2-font-weight);
   text-align: center;
   color: var(--color-text);
 }
@@ -36,11 +36,16 @@ html {
 
 .hero-bg {
   position: absolute;
-  border: 0;
-  padding: 0;               
-  z-index: 0;             
+  inset: 0;
+  z-index: 0;
   width: 100%;
   height: 100%;
+}
+
+.hero-bg-img {
+  width: 100%;
+  height: 100%;
+  display: block;
   object-fit: cover;
 }
 

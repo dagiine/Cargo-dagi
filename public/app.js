@@ -1,325 +1,182 @@
-// renderHeader → header HTML үүсгэнэ.
-// renderSignin → signin хэсгийг буцаана. Одоогоор хоосон string буцаадаг.
-// initSignin   → login/register form-ийн event listener-үүдийг ажиллуулна.
-import { renderHeader, renderSignin, initSignin } from "./components/header.js";
+  import { renderHeader, renderSignin, initSignin } from "./components/header.js";
+  import { renderFooter } from "./components/footer.js";
+  import { isLoggedIn } from "./js/api.js";
 
-// Performance: эхний load дээр FAQ/order component болон api.js хэрэггүй.
-// Тиймээс тухайн page рүү орох үед dynamic import хийж ачаална.
-function getSession() {
-  const token = localStorage.getItem("c4c_token");
-  const userText = localStorage.getItem("c4c_user");
+  const routes = [
+    { 
+      item: "Нүүр", 
+      lnk: "#/", 
+      component: "home", 
+      mainClass: "home-main home" 
+    },
 
-  if (!token || !userText) return null;
+    {
+      item: "Захиалга хянах",
+      lnk: "#/track",
+      component: "track",
+      mainClass: "track-main"
+    },
 
-  try {
-    return { token, user: JSON.parse(userText) };
-  } catch (_) {
-    localStorage.removeItem("c4c_token");
-    localStorage.removeItem("c4c_user");
-    return null;
-  }
-}
+    {
+      item: "Захиалга үүсгэх",
+      lnk: "#/create-order",
+      component: "create-order",
+      mainClass: ""
+    },
 
-function isLoggedIn() {
-  return !!getSession();
-}
+    {
+      item: "Профайл",
+      lnk: "#/profile",
+      component: "profile",
+      mainClass: "profile-main",
+      private: true,
+      hideFromNav: true
+    },
 
-// Сайтын route буюу page-үүдийн тохиргоо.
-// item       → navigation дээр харагдах нэр
-// lnk        → hash link
-// component  → pages folder доторх JS file-ийн нэр
-// mainClass  → тухайн page-ийн <main> дээр нэмэгдэх class
-// private    → login шаардлагатай page эсэх
-// hideFromNav → navigation дээр харуулахгүй байх эсэх
-const routes = [
-  {
-    item: "Нүүр",
-    lnk: "#/",
-    component: "home",
-    mainClass: "home-main home",
-  },
+    {
+      item: "Тусламж",
+      lnk: "#/support",
+      component: "support",
+      mainClass: "support-main"
+    },
 
-  {
-    item: "Захиалга хянах",
-    lnk: "#/track",
-    component: "track",
-    mainClass: "track-main",
-  },
+    {
+      item: "Бидний тухай",
+      lnk: "#/about-us",
+      component: "about-us",
+      mainClass: ""
+    },
+  ];
 
-  {
-    item: "Захиалга үүсгэх",
-    lnk: "#/create-order",
-    component: "create-order",
-    mainClass: "",
-  },
+  function loadCSS(page) {
+    document.querySelector("#page-css")?.remove();
 
-  {
-    item: "Профайл",
-    lnk: "#/profile",
-    component: "profile",
-    mainClass: "profile-main",
-
-    // private true тул зөвхөн login хийсэн хэрэглэгч орж болно.
-    private: true,
-
-    // Profile page navigation menu дээр шууд харагдахгүй.
-    // Харин login хийсэн үед header дээр user/profile shortcut-аар орно.
-    hideFromNav: true,
-  },
-
-  {
-    item: "Тусламж",
-    lnk: "#/support",
-    component: "support",
-    mainClass: "support-main",
-  },
-
-  {
-    item: "Бидний тухай",
-    lnk: "#/about-us",
-    component: "about-us",
-    mainClass: "",
-  },
-];
-
-// Тухайн page-д хэрэгтэй CSS file-ийг ачаалах function.
-// Жишээ: page = "home" бол ./css/home.css ачаална.
-function loadCSS(page) {
-  // Өмнө нь ачаалсан page-specific CSS байвал устгана.
-  // Ингэхгүй бол өөр page-ийн CSS давхар нөлөөлж магадгүй.
-  document.querySelector("#page-css")?.remove();
-
-  // Шинэ <link> tag үүсгэнэ.
-  const link = document.createElement("link");
-
-  // Performance: CSS-ийг preload хийж аваад дараа нь stylesheet болгоно.
-  // Ингэснээр эхний render-ийг аль болох бага хаана.
-  link.rel = "preload";
-  link.as = "style";
-
-  // CSS file-ийн замыг тохируулна.
-  link.href = `./css/${page}.css`;
-
-  // CSS татагдаж дуусмагц жинхэнэ stylesheet болгоно.
-  link.onload = () => {
-    link.onload = null;
-    link.rel = "stylesheet";
-  };
-
-  // Дараа нь устгахын тулд id өгч байна.
-  link.id = "page-css";
-
-  // <head> дотор CSS link-ийг нэмнэ.
-  document.head.appendChild(link);
-}
-
-// Зарим page-д нэмэлт CSS хэрэгтэй үед ашиглах function.
-// Одоогоор зөвхөн track page дээр track-results.css нэмэлтээр ачаалж байна.
-function loadExtraCSS(page) {
-  // Өмнө нь ачаалсан extra CSS байвал устгана.
-  document.querySelector("#page-extra-css")?.remove();
-
-  // Track page дээр tracking result card/timeline-ийн CSS нэмэлтээр хэрэгтэй.
-  if (page === "track") {
     const link = document.createElement("link");
-
-    // Performance: track result CSS-ийг бас async ачаална.
-    link.rel = "preload";
-    link.as = "style";
-    link.href = "./css/track-results.css";
-    link.onload = () => {
-      link.onload = null;
-      link.rel = "stylesheet";
-    };
-    link.id = "page-extra-css";
+    link.rel = "stylesheet";
+    link.href = `./css/${page}.css`;
+    link.id = "page-css";
 
     document.head.appendChild(link);
   }
-}
 
-// Component CSS-ийг зөвхөн хэрэгтэй үед нь нэг удаа ачаална.
-function ensureCSS(id, href) {
-  if (document.getElementById(id)) return;
+  function loadExtraCSS(page) {
+    document.querySelector("#page-extra-css")?.remove();
+    document.querySelector("#component-extra-css")?.remove();
 
-  const link = document.createElement("link");
-  link.id = id;
-  link.rel = "preload";
-  link.as = "style";
-  link.href = href;
-  link.onload = () => {
-    link.onload = null;
-    link.rel = "stylesheet";
-  };
-  document.head.appendChild(link);
-}
-
-// Тухайн page-д хэрэгтэй нэмэлт JS logic-ийг ачаалах function.
-// Dynamic import ашиглаж байгаа тул зөвхөн тухайн page орсон үед JS нь ачаална.
-async function loadPageJS(page) {
-  try {
-    // Support page дээр FAQ search logic хэрэгтэй.
-    // faq-item нь web component биш тул тусад нь import хийхгүй.
-    if (page === "support") {
-      ensureCSS("faq-item-css", "./components/faq-item.css");
-
-      const module = await import("./js/initSupportSearch.js");
-      module.initSupportSearch?.();
-    }
-
-    // Track page дээр order-card хэрэгтэй.
-    // status-badge нь web component биш, order-card дотор helper function-оор ашиглагдана.
     if (page === "track") {
-      ensureCSS("status-badge-css", "./components/status-badge.css");
-      ensureCSS("order-card-css", "./components/order-card.css");
+      const resultCSS = document.createElement("link");
+      resultCSS.rel = "stylesheet";
+      resultCSS.href = "./css/track-results.css";
+      resultCSS.id = "page-extra-css";
+      document.head.appendChild(resultCSS);
 
-      await import("./components/order-card.js");
-
-      const module = await import("./js/trackUI.js");
-
-      // TrackUI class-аас object үүсгээд init function-г ажиллуулна.
-      await new module.TrackUI().init();
+      // Order card нь web component тул CSS-ийг тусдаа файлд салгасан.
+      const orderCardCSS = document.createElement("link");
+      orderCardCSS.rel = "stylesheet";
+      orderCardCSS.href = "./components/order-card.css";
+      orderCardCSS.id = "component-extra-css";
+      document.head.appendChild(orderCardCSS);
     }
-
-    // Home page дээр home tracking logic хэрэгтэй.
-    // status-badge нь web component биш, home.js дотор helper function-оор зурна.
-    if (page === "home") {
-      const module = await import("./js/initHomePage.js");
-
-      // Home дээрээс tracking code/phone хайх logic.
-      module.initHomeTracking?.();
-
-      // Хаяг copy хийх logic.
-      module.initAddressCopy?.();
-    }
-
-    // Create order page дээр захиалга үүсгэх form logic ажиллуулна.
-    if (page === "create-order") {
-      const module = await import("./js/initCreateOrder.js");
-      module.initCreateOrder?.();
-    }
-
-    // Profile page дээр хэрэглэгчийн мэдээлэл/захиалгын logic ажиллуулна.
-    if (page === "profile") {
-      const module = await import("./js/initProfile.js");
-      module.initProfile?.();
-    }
-  } catch (err) {
-    // Page-ийн JS ачаалах үед алдаа гарвал console дээр харуулна.
-    console.error(`${page} JS load error:`, err);
-  }
-}
-
-// Browser-ийн hash-аас тохирох route-ийг олно.
-// Жишээ: "#/track?code=MN-12345" байсан ч зөвхөн "#/track" хэсгийг ашиглана.
-function getRouteFromHash(hash) {
-  // Query хэсгийг салгаж авна.
-  const cleanHash = hash.split("?")[0];
-
-  // routes array дотроос cleanHash-тэй таарах route хайна.
-  // Олдохгүй бол default-аар routes[0] буюу home page-ийг буцаана.
-  return routes.find((r) => r.lnk === cleanHash) || routes[0];
-}
-
-// Бүх page-ийг render хийх гол function.
-// Hash өөрчлөгдөх бүрт энэ function дахин ажиллана.
-async function render() {
-  // Одоогийн browser hash-ийг авна.
-  // Хэрэв hash байхгүй бол default-аар "#/" буюу home page.
-  const hash = document.location.hash || "#/";
-
-  // Query хэсгийг салгаж цэвэр hash авна.
-  const cleanHash = hash.split("?")[0];
-
-  // Хэрэв хэрэглэгч login хийсэн байхад Нүүр page руу орвол
-  // шууд Захиалга хянах page руу шилжүүлнэ.
-  if (cleanHash === "#/" && isLoggedIn()) {
-    window.location.hash = "#/track";
-    return;
   }
 
-  // Одоогийн hash-д тохирох route-ийг авна.
-  const route = getRouteFromHash(hash);
+  async function loadPageJS(page) {
+    try {
+      if (page === "support") {
+        const module = await import("./js/initSupportSearch.js");
+        module.initSupportSearch?.();
+      }
 
-  // Хэрэв private page руу login хийгээгүй хэрэглэгч орох гэж байвал
-  // home page руу буцаана.
-  if (route.private && !isLoggedIn()) {
-    window.location.hash = "#/";
-    return;
+      if (page === "track") {
+        const module = await import("./js/trackUI.js");
+        await new module.TrackUI().init();
+      }
+
+      if (page === "home") {
+        const module = await import("./js/initHomePage.js");
+        module.initHomeTracking?.();
+        module.initAddressCopy?.();
+      }
+
+      if (page === "create-order") {
+        const module = await import("./js/initCreateOrder.js");
+        module.initCreateOrder?.();
+      }
+
+      if (page === "profile") {
+        const module = await import("./js/initProfile.js");
+        module.initProfile?.();
+      }
+
+    } catch (err) {
+      console.error(`${page} JS load error:`, err);
+    }
   }
 
-  // Header дээр харагдах route-уудыг шүүнэ.
-  const headerRoutes = routes.filter((route) => {
-    // hideFromNav true бол menu дээр харуулахгүй.
-    if (route.hideFromNav) return false;
+  function getRouteFromHash(hash) {
+    const cleanHash = hash.split("?")[0];
+    return routes.find((r) => r.lnk === cleanHash) || routes[0];
+  }
 
-    // Login хийсэн үед Нүүр link-ийг menu дээрээс нууж байна.
-    if (isLoggedIn() && route.item === "Нүүр") return false;
+  async function render() {
+    const hash = document.location.hash || "#/";
+    const cleanHash = hash.split("?")[0];
 
-    // Бусад route-уудыг харуулна.
-    return true;
-  });
+    // Нэвтэрсэн хэрэглэгч Нүүр рүү орвол шууд хянах хуудас руу шилжинэ
+    if (cleanHash === "#/" && isLoggedIn()) {
+      window.location.hash = "#/track";
+      return;
+    }
 
-  // #app дотор header, main, footer-ийг зурна.
-  document.querySelector("#app").innerHTML = `
-    <!-- Login panel нээх/хаах checkbox -->
-    <input type="checkbox" id="signin-toggle" hidden/>
+    const route = getRouteFromHash(hash);
 
-    <!-- Header component -->
-    ${renderHeader(headerRoutes, cleanHash)}
+    // Нэвтрээгүй хэрэглэгч profile page руу орохгүй
+    if (route.private && !isLoggedIn()) {
+      window.location.hash = "#/";
+      return;
+    }
 
-    <!-- Одоогоор хоосон signin render -->
-    ${renderSignin()}
-
-    <!-- Login panel-ийн backdrop -->
-    <label for="signin-toggle" class="signin-backdrop"></label>
-
-    <!-- Page content энд орно -->
-    <main class="${route.mainClass || ""}"></main>
-
-    <!-- Footer-ийг main content гарсны дараа lazy ачаална -->
-    <div id="footer-placeholder"></div>
-  `;
-
-  // Header доторх login/register form-ийн event-үүдийг ажиллуулна.
-  // Энэ нь renderHeader хийсний дараа дуудагдах ёстой.
-  initSignin();
-
-  try {
-    // Эхлээд тухайн page-ийн CSS-ийг ачаална.
-    loadCSS(route.component);
-
-    // Хэрэв тухайн page-д нэмэлт CSS хэрэгтэй бол ачаална.
-    loadExtraCSS(route.component);
-
-    // Дараа нь тухайн page-ийн JS module-ийг dynamic import хийж ачаална.
-    // Жишээ: route.component = "home" бол ./pages/home.js ачаална.
-    const pageModule = await import(`./pages/${route.component}.js`);
-
-    // Page module-ийн default export function-г ажиллуулж HTML авна.
-    // Тэр HTML-ээ <main> дотор оруулна.
-    document.querySelector("main").innerHTML = pageModule.default();
-
-    // Page-specific JS logic-ийг ажиллуулна.
-    await loadPageJS(route.component);
-
-    // Footer нь эхний дэлгэцэд харагдахгүй тул дараа нь ачаална.
-    import("./components/footer.js").then((module) => {
-      const footerSpot = document.querySelector("#footer-placeholder");
-      if (footerSpot) footerSpot.outerHTML = module.renderFooter();
+    // Нэвтэрсэн үед Нүүр болон hidden route-г menu дээрээс нуух
+    const headerRoutes = routes.filter((route) => {
+      if (route.hideFromNav) return false;
+      if (isLoggedIn() && route.item === "Нүүр") return false;
+      return true;
     });
-  } catch (err) {
-    // Page ачаалах үед алдаа гарвал console дээр харуулна.
-    console.error("Page load error:", err);
 
-    // Хэрэглэгчид харагдах энгийн error message.
-    document.querySelector("main").innerHTML =
-      "<p>Хуудас ачаалахад алдаа гарлаа.</p>";
+    document.querySelector("#app").innerHTML = `
+      <input type="checkbox" id="signin-toggle" hidden/>
+
+      ${renderHeader(headerRoutes, cleanHash)}
+      ${renderSignin()}
+
+      <label for="signin-toggle" class="signin-backdrop"></label>
+      <main class="${route.mainClass || ""}"></main>
+
+      ${renderFooter()}
+    `;
+
+    initSignin();
+
+    try {
+      /* Эхлээд CSS */
+      loadCSS(route.component);
+      loadExtraCSS(route.component);
+
+      /* Дараа нь хуудсууд */
+      const pageModule =
+        await import(
+          `./pages/${route.component}.js`
+        );
+
+      document.querySelector("main").innerHTML = pageModule.default();
+      await loadPageJS(route.component);
+    }
+    catch (err) {
+      console.error("Page load error:", err);
+
+      document.querySelector("main").innerHTML = 
+        "<p>Хуудас ачаалахад алдаа гарлаа.</p>";
+    }
   }
-}
 
-// DOMContentLoaded → HTML бүрэн ачаалсны дараа render ажиллуулна.
-window.addEventListener("DOMContentLoaded", render);
-
-// hashchange → URL hash өөрчлөгдөх үед шинэ page render хийнэ.
-// Жишээ: #/track → #/support
-window.addEventListener("hashchange", render);
+  window.addEventListener("DOMContentLoaded", render);
+  window.addEventListener("hashchange", render);

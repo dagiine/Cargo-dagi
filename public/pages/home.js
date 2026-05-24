@@ -1,9 +1,22 @@
-import { buildStatusBadge } from "../components/status-badge.js";
-
 export default function home() {
   return `
     <section class="hero">
-      <img src="./pics/hero-640.webp" srcset="./pics/hero-640.webp 640w, ./pics/hero-960.webp 960w, ./pics/hero.webp 1200w" sizes="100vw" class="hero-bg" alt="Хятадаас Монгол руу карго тээвэр" width="640" height="320" fetchpriority="high" decoding="async" />
+      <picture class="hero-bg">
+        <source
+          type="image/webp"
+          srcset="./pics/hero-480.webp 480w, ./pics/hero-800.webp 800w, ./pics/hero-1200.webp 1200w"
+          sizes="100vw"
+        />
+        <img
+          src="./pics/hero-800.webp"
+          class="hero-bg-img"
+          alt="Hero image"
+          width="800"
+          height="400"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
 
       <div class="hero-overlay"></div>
 
@@ -73,40 +86,45 @@ export default function home() {
 
         <div class="steps-grid">
 
-          ${buildStatusBadge({
-            variant: "home",
-            icon: "send",
-            status: "Захиалга үүсгэсэн",
-            description: "Та захиалгаа манай системд бүртгүүлснээр илгээмжний мэдээлэл үүснэ. Энэ шатанд захиалгын мэдээллээ засах эсвэл цуцлах боломжтой.",
-          })}
+          <article class="step">
+            <div class="step-icon">
+              <span class="material-symbols-outlined">send</span>
+            </div>
+            <span class="step-label">Захиалга үүсгэсэн</span>
+            <p>Та захиалгаа манай системд бүртгүүлснээр илгээмжний мэдээлэл үүснэ. Энэ шатанд захиалгын мэдээллээ засах эсвэл цуцлах боломжтой.</p>
+          </article>
 
-          ${buildStatusBadge({
-            variant: "home",
-            icon: "inventory_2",
-            status: "Хятадын агуулахад",
-            description: "Таны илгээмж Хятад дахь агуулахад ирж, жин хэмжилт хийгдэнэ. Ачаа ихэвчлэн тухайн өдөр эсвэл маргааш нь тээвэрлэгдэнэ.",
-          })}
+          <article class="step">
+            <div class="step-icon">
+              <span class="material-symbols-outlined">inventory_2</span>
+            </div>
+            <span class="step-label">Хятадын агуулахад</span>
+            <p>Таны илгээмж Хятад дахь агуулахад ирж, жин хэмжилт хийгдэнэ. Ачаа ихэвчлэн тухайн өдөр эсвэл маргааш нь тээвэрлэгдэнэ.</p>
+          </article>
 
-          ${buildStatusBadge({
-            variant: "home",
-            icon: "local_shipping",
-            status: "Замын Үүд дээр",
-            description: "Илгээмж хилээр нэвтрэх гаалийн бүрдүүлэлтэд орно. Гаалийн шалгалт дундажаар 3–24 цаг орчим үргэлжилдэг.",
-          })}
+          <article class="step">
+            <div class="step-icon">
+              <span class="material-symbols-outlined">local_shipping</span>
+            </div>
+            <span class="step-label">Замын Үүд дээр</span>
+            <p>Илгээмж хилээр нэвтрэх гаалийн бүрдүүлэлтэд орно. Гаалийн шалгалт дундажаар 3–24 цаг орчим үргэлжилдэг.</p>
+          </article>
 
-          ${buildStatusBadge({
-            variant: "home",
-            icon: "warehouse",
-            status: "Улаанбаатарт ирсэн",
-            description: "Илгээмжээ хүлээн авахдаа хяналтын код эсвэл бүртгэлтэй утасны дугаараа баталгаажуулна.",
-          })}
+          <article class="step">
+            <div class="step-icon">
+              <span class="material-symbols-outlined">warehouse</span>
+            </div>
+            <span class="step-label">Улаанбаатарт ирсэн</span>
+            <p>Илгээмжээ хүлээн авахдаа хяналтын код эсвэл бүртгэлтэй утасны дугаараа баталгаажуулна.</p>
+          </article>
 
-          ${buildStatusBadge({
-            variant: "home",
-            icon: "check_circle",
-            status: "Олгогдсон",
-            description: "Та илгээмжээ хүлээн авч, захиалга амжилттай дуусгавар болно.",
-          })}
+          <article class="step">
+            <div class="step-icon">
+              <span class="material-symbols-outlined">check_circle</span>
+            </div>
+            <span class="step-label">Олгогдсон</span>
+            <p>Та илгээмжээ хүлээн авч, захиалга амжилттай дуусгавар болно.</p>
+          </article>
         </div>
       </div>
     </section>
