@@ -1,0 +1,222 @@
+/* =========================================
+   ТУСЛАМЖ ХУУДАС
+   Энгийн бүтэц: хайлт + category button + FAQ list
+========================================= */
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: var(--page-padding-y) var(--space-page) var(--page-padding-bottom);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--section-gap);
+}
+
+.page-header {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--h1-font-size);
+  font-weight: var(--h1-font-weight);
+  line-height: var(--h1-line-height);
+}
+
+.page-header p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--font-size-base);
+  line-height: 1.7;
+}
+
+/* =========================================
+   ХАЙЛТ
+========================================= */
+
+.search {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--color-bg);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.search:focus-within {
+  border-color: var(--border-accent);
+  box-shadow: 0 0 0 3px var(--color-yellow-dim);
+}
+
+.search .material-symbols-outlined {
+  padding: 0 14px;
+  color: var(--color-muted);
+  font-size: 22px;
+}
+
+.search input {
+  flex: 1;
+  height: 52px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-base);
+  font-size: var(--font-size-base);
+}
+
+.search input::placeholder {
+  color: var(--color-muted);
+  opacity: 0.65;
+}
+
+/* =========================================
+   CATEGORY BUTTONS
+========================================= */
+
+.faq-app {
+  width: 100%;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.faq-category-btn {
+  min-height: var(--btn-height);
+  padding: var(--btn-padding);
+  border-radius: var(--btn-radius);
+  border: 1px solid var(--border-default);
+  background: var(--color-bg);
+  color: var(--color-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-base);
+  font-size: var(--btn-font-size);
+  font-weight: 800;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.faq-category-btn:hover,
+.faq-category-btn.active {
+  border-color: var(--color-orange);
+  background: var(--color-orange);
+  color: var(--color-cream);
+}
+
+.faq-category-btn .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* =========================================
+   FAQ LIST
+========================================= */
+
+.faq-app section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.faq-app h2 {
+  margin: 0 0 4px;
+  color: var(--color-text);
+  font-size: var(--h2-font-size);
+  font-weight: var(--h2-font-weight);
+  line-height: var(--h2-line-height);
+}
+
+.faq-list-public {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faq-list-public article {
+  overflow: hidden;
+  background: var(--color-bg);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.faq-list-public article:hover {
+  border-color: var(--border-accent);
+}
+
+details summary {
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details summary::after {
+  content: "expand_more";
+  font-family: "Material Symbols Outlined";
+  color: var(--color-brown);
+  font-size: 22px;
+  transition: var(--transition-fast);
+}
+
+details[open] summary::after {
+  transform: rotate(180deg);
+}
+
+details summary:hover {
+  background: var(--color-surface);
+}
+
+details p {
+  margin: 0;
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--border-default);
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 767px) {
+  main {
+    padding: 42px 14px 100px;
+  }
+
+  .faq-category-btn {
+    flex: 1 1 140px;
+    justify-content: center;
+    padding: 0 12px;
+  }
+}
+
+/* FAQ web component нь энгийн block шиг ажиллана */
+faq-item {
+  display: block;
+}
