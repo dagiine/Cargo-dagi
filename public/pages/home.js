@@ -1,7 +1,7 @@
 export default function home() {
   return `
     <section class="hero">
-      <img src="./pics/hero.webp" class="hero-bg" alt="Хятадаас Монгол руу карго тээвэр" width="1200" height="600" fetchpriority="high" decoding="async" />
+      <img src="./pics/hero-640.webp" srcset="./pics/hero-640.webp 640w, ./pics/hero-960.webp 960w, ./pics/hero.webp 1200w" sizes="100vw" class="hero-bg" alt="Хятадаас Монгол руу карго тээвэр" width="640" height="320" fetchpriority="high" decoding="async" />
 
       <div class="hero-overlay"></div>
 

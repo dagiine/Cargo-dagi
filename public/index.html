@@ -33,7 +33,7 @@
     <link rel="icon" href="./pics/logo.webp" type="image/webp" />
 
     <!-- Hero зураг нь LCP тул хамгийн түрүүнд татна. -->
-    <link rel="preload" href="./pics/hero.webp" as="image" type="image/webp" fetchpriority="high" />
+    <link rel="preload" href="./pics/hero-640.webp" as="image" type="image/webp" fetchpriority="high" imagesrcset="./pics/hero-640.webp 640w, ./pics/hero-960.webp 960w, ./pics/hero.webp 1200w" imagesizes="100vw" />
 
     <!-- Эхний paint-д хэрэгтэй хамгийн бага style. Том CSS файлуудыг доор async ачаална. -->
     <style>
@@ -112,22 +112,14 @@
       loadStyle("./styles.css");
       loadStyle("./components/header.css");
       loadStyle("./components/footer.css");
-      loadStyle("./components/status-badge.css");
-      loadStyle("./components/faq-item.css");
-      loadStyle("./components/order-card.css");
     </script>
     <noscript>
       <link rel="stylesheet" href="./styles.css" />
       <link rel="stylesheet" href="./components/header.css" />
       <link rel="stylesheet" href="./components/footer.css" />
-      <link rel="stylesheet" href="./components/status-badge.css" />
-      <link rel="stylesheet" href="./components/faq-item.css" />
-      <link rel="stylesheet" href="./components/order-card.css" />
     </noscript>
 
     <!-- Icon font нь render blocking биш. Ачаалагдахаас өмнө текст контент харагдана. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="preload"
       as="style"

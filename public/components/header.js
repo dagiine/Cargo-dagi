@@ -1,8 +1,23 @@
-// api.js файлаас хэрэгтэй function-уудыг import хийж байна.
-// getSession  → localStorage/session-оос login хийсэн хэрэглэгчийн мэдээлэл авах
-// saveSession → login/register амжилттай бол token болон user мэдээлэл хадгалах
-// authAPI     → backend рүү login/register request явуулах object
-import { getSession, saveSession, authAPI } from "../js/api.js";
+// Performance: header нь эхний load дээр заавал хэрэгтэй.
+// Тиймээс api.js-ийг энд шууд import хийхгүй.
+// Login/register submit хийх үед л dynamic import хийж ачаална.
+function getSession() {
+  const token = localStorage.getItem("c4c_token");
+  const userText = localStorage.getItem("c4c_user");
+
+  if (!token || !userText) return null;
+
+  try {
+    return {
+      token,
+      user: JSON.parse(userText),
+    };
+  } catch (_) {
+    localStorage.removeItem("c4c_token");
+    localStorage.removeItem("c4c_user");
+    return null;
+  }
+}
 
 // Navigation menu дээр харагдах link бүрт тохирох icon-уудыг хадгалж байна.
 // key нь route буюу hash link.
@@ -354,7 +369,10 @@ export function initSignin() {
       }
 
       try {
-        // Backend рүү login request явуулна.
+        // Backend рүү login request явуулах үед л api.js-ийг ачаална.
+        // Ингэснээр home page эхлэхдээ api.js-ийг татахгүй.
+        const { authAPI, saveSession } = await import("../js/api.js");
+
         // value.replace(/\D/g, "") нь утасны дугаараас тэмдэгтүүдийг цэвэрлэнэ.
         const data = await authAPI.login(value.replace(/\D/g, ""), password);
 
@@ -418,7 +436,9 @@ export function initSignin() {
       }
 
       try {
-        // Backend рүү register request явуулна.
+        // Backend рүү register request явуулах үед л api.js-ийг ачаална.
+        const { authAPI, saveSession } = await import("../js/api.js");
+
         const data = await authAPI.register(name, phone, password);
 
         // Register амжилттай бол token болон user мэдээллийг хадгална.

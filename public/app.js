@@ -3,16 +3,26 @@
 // initSignin   → login/register form-ийн event listener-үүдийг ажиллуулна.
 import { renderHeader, renderSignin, initSignin } from "./components/header.js";
 
-import { renderFooter } from "./components/footer.js";
+// Performance: эхний load дээр FAQ/order component болон api.js хэрэггүй.
+// Тиймээс тухайн page рүү орох үед dynamic import хийж ачаална.
+function getSession() {
+  const token = localStorage.getItem("c4c_token");
+  const userText = localStorage.getItem("c4c_user");
 
-// Web component-уудыг import хийж байна.
-// Эдгээрийг import хийснээр browser дээр custom element-үүд бүртгэгдэнэ.
-import "./components/status-badge.js";
-import "./components/faq-item.js";
-import "./components/order-card.js";
+  if (!token || !userText) return null;
 
-// api.js файлаас login хийсэн эсэхийг шалгах function import хийж байна.
-import { isLoggedIn } from "./js/api.js";
+  try {
+    return { token, user: JSON.parse(userText) };
+  } catch (_) {
+    localStorage.removeItem("c4c_token");
+    localStorage.removeItem("c4c_user");
+    return null;
+  }
+}
+
+function isLoggedIn() {
+  return !!getSession();
+}
 
 // Сайтын route буюу page-үүдийн тохиргоо.
 // item       → navigation дээр харагдах нэр
@@ -127,26 +137,53 @@ function loadExtraCSS(page) {
   }
 }
 
+// Component CSS-ийг зөвхөн хэрэгтэй үед нь нэг удаа ачаална.
+function ensureCSS(id, href) {
+  if (document.getElementById(id)) return;
+
+  const link = document.createElement("link");
+  link.id = id;
+  link.rel = "preload";
+  link.as = "style";
+  link.href = href;
+  link.onload = () => {
+    link.onload = null;
+    link.rel = "stylesheet";
+  };
+  document.head.appendChild(link);
+}
+
 // Тухайн page-д хэрэгтэй нэмэлт JS logic-ийг ачаалах function.
 // Dynamic import ашиглаж байгаа тул зөвхөн тухайн page орсон үед JS нь ачаална.
 async function loadPageJS(page) {
   try {
-    // Support page дээр FAQ/search logic ажиллуулна.
+    // Support page дээр FAQ component/search logic хэрэгтэй.
     if (page === "support") {
+      ensureCSS("faq-item-css", "./components/faq-item.css");
+      await import("./components/faq-item.js");
+
       const module = await import("./js/initSupportSearch.js");
       module.initSupportSearch?.();
     }
 
-    // Track page дээр tracking form/result logic ажиллуулна.
+    // Track page дээр order-card/status-badge component хэрэгтэй.
     if (page === "track") {
+      ensureCSS("status-badge-css", "./components/status-badge.css");
+      ensureCSS("order-card-css", "./components/order-card.css");
+
+      await import("./components/status-badge.js");
+      await import("./components/order-card.js");
+
       const module = await import("./js/trackUI.js");
 
       // TrackUI class-аас object үүсгээд init function-г ажиллуулна.
       await new module.TrackUI().init();
     }
 
-    // Home page дээр home tracking input болон address copy logic ажиллуулна.
+    // Home page дээр status-badge component болон home tracking logic хэрэгтэй.
     if (page === "home") {
+      await import("./components/status-badge.js");
+
       const module = await import("./js/initHomePage.js");
 
       // Home дээрээс tracking code/phone хайх logic.
@@ -240,8 +277,8 @@ async function render() {
     <!-- Page content энд орно -->
     <main class="${route.mainClass || ""}"></main>
 
-    <!-- Footer component -->
-    ${renderFooter()}
+    <!-- Footer-ийг main content гарсны дараа lazy ачаална -->
+    <div id="footer-placeholder"></div>
   `;
 
   // Header доторх login/register form-ийн event-үүдийг ажиллуулна.
@@ -265,6 +302,12 @@ async function render() {
 
     // Page-specific JS logic-ийг ажиллуулна.
     await loadPageJS(route.component);
+
+    // Footer нь эхний дэлгэцэд харагдахгүй тул дараа нь ачаална.
+    import("./components/footer.js").then((module) => {
+      const footerSpot = document.querySelector("#footer-placeholder");
+      if (footerSpot) footerSpot.outerHTML = module.renderFooter();
+    });
   } catch (err) {
     // Page ачаалах үед алдаа гарвал console дээр харуулна.
     console.error("Page load error:", err);
